@@ -1,0 +1,1483 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ayu-sunk: var(--ayu-sunk);
+  --color-ayu-base: var(--ayu-base);
+  --color-ayu-lift: var(--ayu-lift);
+  --color-ayu-panel: var(--ayu-panel);
+  --color-ayu-popup: var(--ayu-popup);
+  --color-ayu-line: var(--ayu-line);
+  --color-ayu-border: var(--ayu-border);
+  --color-ayu-fg: var(--ayu-fg);
+  --color-ayu-fg-subtle: var(--ayu-fg-subtle);
+  --color-ayu-editor-fg: var(--ayu-editor-fg);
+  --color-ayu-accent: var(--ayu-accent);
+  --color-ayu-accent-hover: var(--ayu-accent-hover);
+  --color-ayu-accent-on: var(--ayu-accent-on);
+  --color-ayu-error: var(--ayu-error);
+  --color-ayu-success: var(--ayu-success);
+  --color-ayu-warning: var(--ayu-warning);
+  --color-ayu-info: var(--ayu-info);
+}
+
+@layer base {
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+    /* CodeStash - OneDark Official Palette (Default) */
+    --ayu-sunk: #22282c;
+    --ayu-base: #282c34;
+    --ayu-lift: #282c34;
+    --ayu-panel: #2f343e;
+    --ayu-popup: #22282c;
+    --menu-bg: #22282c;
+    --menu-hover-bg: #383f4a;
+    --menu-active-bg: color-mix(in srgb, var(--ayu-accent) 16%, var(--ayu-popup));
+
+    --ayu-line: #181e23;
+    --ayu-border: #373c43;
+
+    --ayu-fg: #9da1a9;
+    --ayu-fg-subtle: #676d74;
+    --ayu-editor-fg: #eff1f5;
+
+    --ayu-accent: #5177cc;
+    --ayu-accent-hover: #4365b5;
+    --ayu-accent-on: #ffffff;
+
+    --ayu-error: #e06c75;
+    --ayu-success: #98c379;
+    --ayu-warning: #e5c07b;
+    --ayu-info: #56b6c2;
+
+    --editor-font-size: 13px;
+
+    /* Semantic theme mappings */
+    --bg-canvas: var(--ayu-base);
+    --bg-surface: var(--ayu-lift);
+    --bg-surface-sunken: var(--ayu-sunk);
+    --bg-surface-raised: var(--ayu-panel);
+    --border-subtle: var(--ayu-line);
+    --border-focus: var(--ayu-border);
+
+    --text-primary: var(--ayu-editor-fg);
+    --text-muted: var(--ayu-fg);
+    --text-subtle: var(--ayu-fg-subtle);
+
+    --accent-primary: var(--ayu-accent);
+    --accent-hover: var(--ayu-accent-hover);
+    --accent-success: var(--ayu-success);
+    --accent-warning: var(--ayu-warning);
+    --accent-danger: var(--ayu-error);
+
+    /* Universal CodeStash Brand Personality Tokens */
+    --btn-primary-bg: #0a84ff;
+    --btn-primary-hover: #0070eb;
+    --btn-primary-fg: #ffffff;
+    --btn-primary-border: #0a84ff;
+
+    --folder-active-bg: #5177cc;
+    --folder-active-fg: #ffffff;
+    --folder-active-icon: #ffffff;
+    --folder-active-border: transparent;
+
+    --selection-bg: rgba(10, 132, 255, 0.35);
+    --selection-fg: #ffffff;
+
+    /* Subtle Plain-Text toolbar active property tokens (derived from active theme accent) */
+    --toolbar-active-bg: color-mix(in srgb, var(--ayu-accent) 14%, transparent);
+    --toolbar-active-hover-bg: color-mix(in srgb, var(--ayu-accent) 22%, transparent);
+    --toolbar-active-fg: color-mix(in srgb, var(--ayu-accent) 82%, var(--ayu-editor-fg));
+    --toolbar-active-border: color-mix(in srgb, var(--ayu-accent) 26%, transparent);
+
+    /* SnippetsLab-style active row selection tokens */
+    --list-active-bg: #5177cc;
+    --list-active-fg: #ffffff;
+    --list-active-sub: rgba(255, 255, 255, 0.85);
+    --list-active-badge-bg: rgba(255, 255, 255, 0.22);
+    --list-active-badge-fg: #ffffff;
+
+    /* ==========================================================================
+       MODULAR COMPONENT DESIGN TOKENS
+       Each component has dedicated tokens that fall back to theme palette
+       variables, allowing isolated customization without side effects.
+       ========================================================================== */
+
+    /* 1. Titlebar (Barra superior) */
+    --titlebar-bg: var(--ayu-base);
+    --titlebar-border: var(--ayu-line);
+    --titlebar-fg: var(--ayu-editor-fg);
+
+    /* 2. Barra de búsqueda (Searchbar) */
+    --searchbar-bg: color-mix(in srgb, var(--ayu-sunk) 70%, transparent);
+    --searchbar-hover-bg: var(--ayu-sunk);
+    --searchbar-focus-bg: var(--ayu-lift);
+    --searchbar-border: var(--ayu-line);
+    --searchbar-focus-border: var(--ayu-border);
+    --searchbar-fg: var(--ayu-fg);
+    --searchbar-text: var(--ayu-editor-fg);
+    --searchbar-kbd-bg: var(--ayu-base);
+    --searchbar-kbd-border: var(--ayu-line);
+    --searchbar-kbd-fg: var(--ayu-fg-subtle);
+
+    /* 3. Panel de carpetas (Sidebar izquierdo) */
+    --sidebar-bg: var(--ayu-sunk);
+    --sidebar-border: var(--ayu-line);
+    --sidebar-fg: var(--ayu-fg);
+    --sidebar-fg-subtle: var(--ayu-fg-subtle);
+    --sidebar-hover-bg: color-mix(in srgb, var(--sidebar-bg), #000 12%);
+    --sidebar-active-bg: var(--folder-active-bg);
+    --sidebar-active-fg: var(--folder-active-fg);
+    --sidebar-active-icon: var(--folder-active-icon);
+    --sidebar-footer-bg: var(--sidebar-bg);
+    --sidebar-footer-border: var(--sidebar-border);
+
+    /* 4. Panel de lista de snippets (Columna central) */
+    --list-panel-bg: var(--ayu-base);
+    --list-panel-border: var(--ayu-line);
+    --list-header-bg: var(--list-panel-bg);
+    --list-header-border: var(--list-panel-border);
+    --list-card-border: var(--ayu-line);
+    --list-card-hover-bg: color-mix(in srgb, var(--ayu-lift) 50%, transparent);
+    --list-card-title: var(--ayu-editor-fg);
+    --list-card-sub: var(--ayu-fg-subtle);
+    --list-tag-bg: var(--ayu-sunk);
+    --list-tag-border: var(--ayu-line);
+    --list-tag-fg: var(--ayu-fg);
+
+    /* 5. Cabecera y título de snippet */
+    --snippet-header-bg: var(--ayu-base);
+    --snippet-header-border: var(--ayu-line);
+    --snippet-header-title: var(--ayu-editor-fg);
+    --snippet-header-fg: var(--ayu-fg-subtle);
+    --snippet-header-meta-bg: var(--ayu-lift);
+
+    /* 6. Barra de pestañas de fragmentos (FragmentTabs) */
+    --fragments-bar-bg: var(--ayu-base);
+    --fragments-bar-border: var(--ayu-line);
+    --fragments-divider-height: 50%;
+    --fragments-divider-color: var(--fragments-bar-border);
+    --fragments-divider-width: 1px;
+    --fragment-tab-active-bg: var(--ayu-lift);
+    --fragment-tab-active-fg: var(--ayu-editor-fg);
+    --fragment-tab-active-line: var(--ayu-accent);
+    --fragment-tab-inactive-bg: color-mix(in srgb, var(--ayu-sunk) 80%, transparent);
+    --fragment-tab-inactive-fg: var(--ayu-fg-subtle);
+    --fragment-tab-hover-bg: color-mix(in srgb, var(--ayu-sunk) 50%, transparent);
+    --fragment-tab-hover-fg: var(--ayu-editor-fg);
+
+    /* 7. Panel de código y espacio de trabajo */
+    --editor-panel-bg: var(--ayu-lift);
+
+    /* 8. Barra de estado inferior (Status bar) */
+    --statusbar-bg: var(--editor-panel-bg);
+    --statusbar-border: var(--editor-panel-bg);
+    --statusbar-fg: var(--ayu-fg-subtle);
+
+    /* 9. Etiquetas / Tags (Separadas por contexto) */
+    --sidebar-tag-bg: var(--ayu-sunk);
+    --sidebar-tag-border: var(--ayu-line);
+    --sidebar-tag-fg: var(--ayu-fg);
+    --sidebar-tag-hover-bg: color-mix(in srgb, var(--sidebar-tag-bg) 75%, var(--ayu-lift));
+    --sidebar-tag-hover-border: var(--ayu-border);
+    --sidebar-tag-hover-fg: var(--ayu-editor-fg);
+    --sidebar-tag-active-bg: var(--ayu-panel);
+    --sidebar-tag-active-border: var(--ayu-border);
+    --sidebar-tag-active-fg: var(--ayu-editor-fg);
+
+    --tag-badge-bg: var(--ayu-sunk);
+    --tag-badge-border: var(--ayu-line);
+    --tag-badge-fg: var(--ayu-fg);
+
+    --editor-tag-popover-bg: var(--ayu-popup);
+    --editor-tag-popover-border: var(--ayu-border);
+    --editor-tag-item-active-bg: var(--ayu-panel);
+    --editor-tag-item-active-fg: var(--ayu-editor-fg);
+    --editor-tag-item-hover-bg: var(--menu-hover-bg);
+
+    /* 10. Selección de código y cursor del editor CodeMirror */
+    --editor-selection-bg: rgba(56, 139, 253, 0.34);
+    --editor-selection-fg: inherit;
+    --editor-selection-match: rgba(56, 139, 253, 0.18);
+    --editor-cursor: var(--ayu-accent);
+    --editor-active-line-bg: rgba(255, 255, 255, 0.04);
+    --editor-gutter-bg: var(--editor-panel-bg);
+    --editor-gutter-fg: var(--ayu-fg-subtle);
+    --editor-gutter-active-fg: var(--ayu-accent);
+  }
+
+  /* Built-in Theme Attribute Overrides (also updated dynamically in JS) */
+  html[data-theme="one-dark"] {
+    --ayu-sunk: #1d1f23;
+    --ayu-base: #21252b;
+    --ayu-lift: #282c34;
+    --ayu-panel: #282c34;
+    --ayu-popup: #21252b;
+    --menu-bg: #21252b;
+    --menu-hover-bg: #353b45;
+    --ayu-line: #181a1f;
+    --ayu-border: #3e4452;
+    --ayu-fg: #828997;
+    --ayu-fg-subtle: #5c6370;
+    --ayu-editor-fg: #abb2bf;
+    --ayu-accent: #0a84ff;
+    --ayu-accent-hover: #0070eb;
+    --ayu-accent-on: #ffffff;
+    --ayu-error: #e06c75;
+    --ayu-success: #98c379;
+    --ayu-warning: #e5c07b;
+    --ayu-info: #56b6c2;
+
+    --btn-primary-bg: #0a84ff;
+    --btn-primary-hover: #0070eb;
+    --btn-primary-fg: #ffffff;
+    --btn-primary-border: #0a84ff;
+
+    --folder-active-bg: #0a84ff;
+    --folder-active-fg: #ffffff;
+    --folder-active-icon: #ffffff;
+    --folder-active-border: transparent;
+
+    --selection-bg: rgba(10, 132, 255, 0.35);
+    --selection-fg: inherit;
+    --editor-selection-bg: rgba(56, 139, 253, 0.34);
+    --editor-selection-match: rgba(56, 139, 253, 0.18);
+    --editor-active-line-bg: rgba(255, 255, 255, 0.04);
+    --editor-cursor: #0a84ff;
+    --fragment-tab-active-line: #0a84ff;
+
+    --sidebar-tag-active-bg: #0a84ff;
+    --sidebar-tag-active-fg: #ffffff;
+    --sidebar-tag-active-border: #0a84ff;
+    --sidebar-tag-hover-fg: #0a84ff;
+    --sidebar-tag-hover-border: #0a84ff;
+
+    --list-active-bg: #0a84ff;
+    --list-active-fg: #ffffff;
+    --list-active-sub: rgba(255, 255, 255, 0.85);
+    --list-active-badge-bg: rgba(255, 255, 255, 0.22);
+    --list-active-badge-fg: #ffffff;
+  }
+
+  html[data-theme="codestash-spacegray"] {
+    --ayu-sunk: #1e2530;
+    --ayu-base: #242e3a;
+    --ayu-lift: #242e3a;
+    --ayu-panel: #2b3645;
+    --ayu-popup: #202936;
+    --menu-bg: #202936;
+    --menu-hover-bg: #323d4d;
+    --ayu-line: #1a222d;
+    --ayu-border: #323b48;
+    --ayu-fg: #c0c5ce;
+    --ayu-fg-subtle: #65737e;
+    --ayu-editor-fg: #eff1f5;
+    --ayu-accent: #0a84ff;
+    --ayu-accent-hover: #0070eb;
+    --ayu-accent-on: #ffffff;
+    --ayu-error: #bf616a;
+    --ayu-success: #a3be8c;
+    --ayu-warning: #ebcb8b;
+    --ayu-info: #8fa1b3;
+
+    --btn-primary-bg: #0a84ff;
+    --btn-primary-hover: #0070eb;
+    --btn-primary-fg: #ffffff;
+    --btn-primary-border: #0a84ff;
+
+    --folder-active-bg: #005ad2;
+    --folder-active-fg: #ffffff;
+    --folder-active-icon: #ffffff;
+    --folder-active-border: transparent;
+
+    --selection-bg: rgba(10, 132, 255, 0.35);
+    --selection-fg: inherit;
+    --editor-selection-bg: rgba(56, 139, 253, 0.34);
+    --editor-selection-match: rgba(56, 139, 253, 0.18);
+    --editor-cursor: #0a84ff;
+    --editor-active-line-bg: rgba(255, 255, 255, 0.04);
+    --editor-gutter-bg: #242e3a;
+    --editor-gutter-fg: #65737e;
+    --editor-gutter-active-fg: #c0c5ce;
+    --fragment-tab-active-line: #0a84ff;
+
+    --titlebar-bg: #202936;
+    --titlebar-border: #111a27;
+    --searchbar-bg: #1a222d;
+    --searchbar-border: #2c3644;
+    --searchbar-hover-bg: #1e2733;
+    --searchbar-focus-bg: #1e2733;
+    --searchbar-kbd-bg: #242e3a;
+
+    --sidebar-bg: #202936;
+    --sidebar-border: #0e1724;
+    --sidebar-fg: #c8cfd8;
+    --sidebar-fg-subtle: #65737e;
+    --sidebar-hover-bg: #1a222d;
+    --sidebar-footer-bg: #1f2835;
+    --sidebar-footer-border: #151d28;
+
+    --list-panel-bg: #242e3a;
+    --list-panel-border: #111a27;
+    --list-header-bg: #242e3a;
+    --list-header-border: #1c2430;
+    --list-card-border: #323b48;
+    --list-card-title: #eff1f5;
+    --list-card-sub: #8b94a1;
+    --list-tag-bg: #3c434f;
+    --list-tag-border: transparent;
+    --list-tag-fg: #d8dee9;
+
+    --snippet-header-bg: #242e3a;
+    --snippet-header-border: #1d2632;
+    --snippet-header-title: #eff1f5;
+    --snippet-header-fg: #8b94a1;
+
+    --fragments-bar-bg: #202936;
+    --fragments-bar-border: #151d28;
+    --fragment-tab-active-bg: #242e3a;
+    --fragment-tab-inactive-bg: #1e2631;
+    --fragments-divider-height: 45%;
+
+    --editor-panel-bg: #242e3a;
+    --statusbar-bg: #242e3a;
+    --statusbar-border: #242e3a;
+    --statusbar-fg: #8b94a1;
+
+    --sidebar-tag-bg: #2a3442;
+    --sidebar-tag-border: #364253;
+    --sidebar-tag-fg: #c8cfd8;
+    --sidebar-tag-hover-bg: #323e4f;
+    --sidebar-tag-active-bg: #0a84ff;
+    --sidebar-tag-active-fg: #ffffff;
+    --sidebar-tag-active-border: #0a84ff;
+    --sidebar-tag-hover-fg: #0a84ff;
+    --sidebar-tag-hover-border: #0a84ff;
+
+    --list-active-bg: #005ad2;
+    --list-active-fg: #ffffff;
+    --list-active-sub: rgba(255, 255, 255, 0.85);
+    --list-active-badge-bg: rgba(255, 255, 255, 0.22);
+    --list-active-badge-fg: #ffffff;
+  }
+
+  html[data-theme="codestash-onedark"] {
+    --ayu-sunk: #22282c;
+    --ayu-base: #282c34;
+    --ayu-lift: #282c34;
+    --ayu-panel: #2f343e;
+    --ayu-popup: #22282c;
+    --menu-bg: #22282c;
+    --menu-hover-bg: #383f4a;
+    --menu-active-bg: color-mix(in srgb, var(--ayu-accent) 16%, var(--ayu-popup));
+    --ayu-line: #181e23;
+    --ayu-border: #373c43;
+    --ayu-fg: #9da1a9;
+    --ayu-fg-subtle: #676d74;
+    --ayu-editor-fg: #eff1f5;
+    --ayu-accent: #5177cc;
+    --ayu-accent-hover: #4365b5;
+    --ayu-accent-on: #ffffff;
+    --ayu-error: #e06c75;
+    --ayu-success: #98c379;
+    --ayu-warning: #e5c07b;
+    --ayu-info: #56b6c2;
+
+    --btn-primary-bg: #0a84ff;
+    --btn-primary-hover: #0070eb;
+    --btn-primary-fg: #ffffff;
+    --btn-primary-border: #0a84ff;
+
+    --folder-active-bg: #5177cc;
+    --folder-active-fg: #ffffff;
+    --folder-active-icon: #ffffff;
+    --folder-active-border: transparent;
+
+    --selection-bg: rgba(56, 139, 253, 0.35);
+    --selection-fg: inherit;
+    --editor-selection-bg: rgba(56, 139, 253, 0.34);
+    --editor-selection-match: rgba(56, 139, 253, 0.18);
+    --editor-cursor: #0a84ff;
+    --editor-active-line-bg: rgba(255, 255, 255, 0.04);
+    --editor-gutter-bg: #282c34;
+    --editor-gutter-fg: #4c5158;
+    --editor-gutter-active-fg: #abb2bf;
+    --fragment-tab-active-line: #5177cc;
+
+    --titlebar-bg: #22282c;
+    --titlebar-border: #181e23;
+    --searchbar-bg: #1c2125;
+    --searchbar-border: #32383e;
+    --searchbar-hover-bg: #20252a;
+    --searchbar-focus-bg: #20252a;
+    --searchbar-kbd-bg: #282c34;
+
+    --sidebar-bg: #22282c;
+    --sidebar-border: #181e23;
+    --sidebar-fg: #d7dae0;
+    --sidebar-fg-subtle: #676d74;
+    --sidebar-hover-bg: #1c2125;
+    --sidebar-footer-bg: #22282c;
+    --sidebar-footer-border: #181e23;
+
+    --list-panel-bg: #282c34;
+    --list-panel-border: #181a1f;
+    --list-header-bg: #282c34;
+    --list-header-border: #1e2228;
+    --list-card-border: #373c43;
+    --list-card-title: #eff1f5;
+    --list-card-sub: #9da1a9;
+    --list-tag-bg: #41454b;
+    --list-tag-border: transparent;
+    --list-tag-fg: #d7dae0;
+
+    --snippet-header-bg: #282c34;
+    --snippet-header-border: #1e2228;
+    --snippet-header-title: #eff1f5;
+    --snippet-header-fg: #9da1a9;
+
+    --fragments-bar-bg: #22282c;
+    --fragments-bar-border: #181e23;
+    --fragment-tab-active-bg: #282c34;
+    --fragment-tab-inactive-bg: #1f2428;
+    --fragments-divider-height: 45%;
+
+    --editor-panel-bg: #282c34;
+    --statusbar-bg: #282c34;
+    --statusbar-border: #282c34;
+    --statusbar-fg: #9da1a9;
+
+    --sidebar-tag-bg: #2c3138;
+    --sidebar-tag-border: #393f47;
+    --sidebar-tag-fg: #d7dae0;
+    --sidebar-tag-hover-bg: #343a42;
+    --sidebar-tag-active-bg: #5177cc;
+    --sidebar-tag-active-fg: #ffffff;
+    --sidebar-tag-active-border: #5177cc;
+    --sidebar-tag-hover-fg: #5177cc;
+    --sidebar-tag-hover-border: #5177cc;
+
+    --list-active-bg: #5177cc;
+    --list-active-fg: #ffffff;
+    --list-active-sub: rgba(255, 255, 255, 0.85);
+    --list-active-badge-bg: rgba(255, 255, 255, 0.22);
+    --list-active-badge-fg: #ffffff;
+  }
+
+  html[data-theme="codestash-light-modern"] {
+    --ayu-sunk: #f5f5f7;
+    --ayu-base: #ffffff;
+    --ayu-lift: #ffffff;
+    --ayu-panel: #ffffff;
+    --ayu-popup: #ffffff;
+    --menu-bg: #ffffff;
+    --menu-hover-bg: #e2e5ea;
+    --ayu-line: #e5e5ea;
+    --ayu-border: #d1d1d6;
+    --ayu-fg: #636366;
+    --ayu-fg-subtle: #8e8e93;
+    --ayu-editor-fg: #1c1c1e;
+    --ayu-accent: #007aff;
+    --ayu-accent-hover: #0062cc;
+    --ayu-accent-on: #ffffff;
+    --ayu-error: #ff3b30;
+    --ayu-success: #34c759;
+    --ayu-warning: #ff9500;
+    --ayu-info: #5856d6;
+
+    --btn-primary-bg: #007aff;
+    --btn-primary-hover: #0062cc;
+    --btn-primary-fg: #ffffff;
+    --btn-primary-border: #007aff;
+
+    --folder-active-bg: #007aff;
+    --folder-active-fg: #ffffff;
+    --folder-active-icon: #ffffff;
+    --folder-active-border: transparent;
+
+    --list-active-bg: #007aff;
+    --list-active-fg: #ffffff;
+    --list-active-sub: rgba(255, 255, 255, 0.85);
+    --list-active-badge-bg: rgba(255, 255, 255, 0.25);
+    --list-active-badge-fg: #ffffff;
+
+    --selection-bg: rgba(0, 122, 255, 0.22);
+    --selection-fg: inherit;
+    --editor-selection-bg: rgba(0, 122, 255, 0.22);
+    --editor-selection-match: rgba(0, 122, 255, 0.15);
+    --editor-cursor: #007aff;
+    --editor-active-line-bg: rgba(0, 0, 0, 0.03);
+    --editor-gutter-fg: #aeaeb2;
+    --editor-gutter-active-fg: #007aff;
+    --fragment-tab-active-line: #007aff;
+
+    --sidebar-tag-bg: #DBE5E8;
+    --sidebar-tag-border: #d1d1d6;
+    --sidebar-tag-fg: #636366;
+    --sidebar-tag-active-bg: #007aff;
+    --sidebar-tag-active-border: #007aff;
+    --sidebar-tag-active-fg: #ffffff;
+    --sidebar-tag-hover-fg: #007aff;
+    --sidebar-tag-hover-border: #007aff;
+  }
+
+  /* CodeStash - Light Modern: macOS stroke blue icons in sidebar */
+  html[data-theme="codestash-light-modern"] aside svg.lucide-folder,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-folder-open,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-inbox,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-trash2,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-star,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-layers,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-folder-plus,
+  html[data-theme="codestash-light-modern"] aside svg.lucide-plus {
+    color: #007aff;
+  }
+
+  /* Active item in sidebar: pure white icons across all themes */
+  aside button.bg-\[var\(--folder-active-bg\)\] svg,
+  aside .bg-\[var\(--folder-active-bg\)\] svg {
+    color: #ffffff !important;
+  }
+
+  /* Universal text selection styling */
+  ::selection {
+    background-color: var(--selection-bg, rgba(0, 122, 255, 0.25));
+  }
+
+  ::-moz-selection {
+    background-color: var(--selection-bg, rgba(0, 122, 255, 0.25));
+  }
+
+  body {
+    background-color: var(--ayu-base);
+    color: var(--ayu-editor-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.01em;
+  }
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--ayu-base);
+}
+
+body.codestash-resizing {
+  cursor: col-resize !important;
+}
+
+body.codestash-resizing * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Custom scrollbars dynamically matching active theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ayu-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ayu-fg);
+}
+
+/* CodeMirror dynamic theming tweaks */
+.cm-theme {
+  height: 100% !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.cm-editor {
+  height: 100% !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--editor-font-size, 14px) !important;
+  background-color: var(--ayu-lift) !important;
+  color: var(--ayu-editor-fg) !important;
+}
+
+.cm-scroller {
+  height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+  font-family: var(--font-mono) !important;
+  line-height: 1.6 !important;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.cm-editor .cm-content.cm-lineWrapping,
+.cm-lineWrapping .cm-line {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cm-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+
+.cm-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  min-height: 28px;
+  min-width: 28px;
+  transition: background-color 0.35s ease;
+}
+
+/* Visible ONLY while actively scrolling */
+.cm-scroller.cm-is-scrolling {
+  scrollbar-color: var(--ayu-fg-subtle) transparent;
+}
+
+.cm-scroller.cm-is-scrolling::-webkit-scrollbar-thumb {
+  background-color: var(--ayu-fg-subtle);
+  transition: background-color 0.15s ease;
+}
+
+.cm-scroller.cm-is-scrolling::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ayu-editor-fg);
+}
+
+.cm-scroller.cm-is-scrolling::-webkit-scrollbar-thumb:active {
+  background-color: var(--ayu-accent);
+}
+
+.cm-scroller::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.cm-gutters {
+  background-color: var(--editor-gutter-bg, var(--ayu-lift)) !important;
+  border-right: none !important;
+  border: none !important;
+  color: var(--editor-gutter-fg, var(--ayu-fg-subtle)) !important;
+}
+
+.cm-activeLineGutter {
+  background-color: var(--editor-active-line-bg, rgba(255, 255, 255, 0.04)) !important;
+  color: var(--editor-gutter-active-fg, var(--ayu-accent)) !important;
+}
+
+.cm-activeLine {
+  background-color: var(--editor-active-line-bg, rgba(255, 255, 255, 0.04)) !important;
+}
+
+.cm-scroller:has(.cm-selectionBackground) .cm-activeLine {
+  background-color: transparent !important;
+}
+
+.cm-cursor {
+  border-left-color: var(--editor-cursor, var(--ayu-accent)) !important;
+}
+
+.cm-selectionBackground,
+.cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+  background-color: var(--editor-selection-bg, rgba(56, 139, 253, 0.34)) !important;
+}
+
+.cm-editor .cm-content ::selection,
+.cm-editor .cm-line ::selection,
+.cm-editor .cm-line > span::selection {
+  background-color: transparent !important;
+}
+
+/* Fragment Animations: slide smoothly towards the left upon addition without overflowing */
+@keyframes fragmentTabSlideIn {
+  0% {
+    opacity: 0;
+    flex-grow: 0.0001;
+    max-width: 0;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  100% {
+    opacity: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    min-width: 80px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@keyframes fragmentContentSlideIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(16px, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes editorSlideInLeft {
+  0% {
+    opacity: 0.4;
+    transform: translate3d(24px, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fragmentBarSlideDown {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fragment-tab-slide-left {
+  animation: fragmentTabSlideIn 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fragment-content-slide-left {
+  animation: fragmentContentSlideIn 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-editor-slide-left {
+  animation: editorSlideInLeft 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fragment-bar {
+  animation: fragmentBarSlideDown 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Subtle, refined horizontal scrollbar for FragmentTabs when overflowing */
+.fragments-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ayu-line) transparent;
+}
+
+.fragments-scroll-container::-webkit-scrollbar {
+  height: 3px;
+}
+
+.fragments-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fragments-scroll-container::-webkit-scrollbar-thumb {
+  background-color: var(--ayu-line);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.fragments-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ayu-accent);
+}
+
+
+/* ==========================================================================
+   Tiptap Rich-Text ("Plain Text" Mode) Editor Styles
+   ========================================================================== */
+@keyframes toolbar-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toolbar-popover {
+  animation: toolbar-popover-in 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rich-editor-scroller {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.25s ease;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.rich-editor-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+
+.rich-editor-scroller::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rich-editor-scroller::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  min-height: 28px;
+  min-width: 28px;
+  transition: background-color 0.3s ease;
+}
+
+.rich-editor-scroller.cm-is-scrolling {
+  scrollbar-color: var(--ayu-fg-subtle) transparent;
+}
+
+.rich-editor-scroller.cm-is-scrolling::-webkit-scrollbar-thumb {
+  background-color: var(--ayu-fg-subtle);
+}
+
+.rich-editor-scroller.cm-is-scrolling::-webkit-scrollbar-thumb:hover {
+  background-color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap-content,
+.codestash-tiptap-content > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.codestash-tiptap .ProseMirror {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 100%;
+  width: 100%;
+  min-width: 0;
+  padding: 18px 24px 96px 24px;
+  box-sizing: border-box;
+  color: var(--ayu-editor-fg);
+  font-family: var(--font-sans);
+  font-size: var(--editor-font-size, 14px);
+  line-height: 1.65;
+  caret-color: var(--editor-cursor, var(--ayu-accent));
+  outline: none;
+  white-space: pre-wrap;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.codestash-tiptap .ProseMirror::selection,
+.codestash-tiptap .ProseMirror *::selection {
+  background: var(--editor-selection-bg, rgba(56, 139, 253, 0.34));
+}
+
+.codestash-tiptap .ProseMirror h1 {
+  font-size: 1.65em;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0.2em 0 0.45em;
+  letter-spacing: -0.02em;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap .ProseMirror h2 {
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0.5em 0 0.35em;
+  letter-spacing: -0.015em;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap .ProseMirror h3 {
+  font-size: 1.08em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0.45em 0 0.25em;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap .ProseMirror p {
+  margin: 0 0 0.55em;
+}
+
+.codestash-tiptap .ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+.codestash-tiptap .ProseMirror strong {
+  font-weight: 700;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap .ProseMirror u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.codestash-tiptap .ProseMirror s {
+  text-decoration: line-through;
+  opacity: 0.78;
+}
+
+.codestash-tiptap .ProseMirror code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 0.12em 0.4em;
+  border-radius: 5px;
+  background: var(--ayu-panel);
+  color: var(--ayu-accent);
+  border: 1px solid var(--ayu-border);
+}
+
+.codestash-tiptap .ProseMirror pre {
+  font-family: var(--font-mono);
+  background: var(--ayu-sunk);
+  border: 1px solid var(--ayu-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0.55em 0;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.codestash-tiptap .ProseMirror pre code {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ayu-editor-fg);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.codestash-tiptap .ProseMirror mark {
+  border-radius: 4px;
+  padding: 0.06em 0.28em;
+  color: #181c24;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.codestash-tiptap .ProseMirror a {
+  color: var(--ayu-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.codestash-tiptap .ProseMirror ul,
+.codestash-tiptap .ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0.25em 0 0.6em;
+}
+
+.codestash-tiptap .ProseMirror ul[data-list-style="bullet"] {
+  list-style-type: disc;
+}
+
+.codestash-tiptap .ProseMirror ul[data-list-style="dash"] {
+  list-style-type: "–  ";
+}
+
+.codestash-tiptap .ProseMirror ol {
+  list-style-type: decimal;
+}
+
+.codestash-tiptap .ProseMirror li::marker {
+  color: var(--ayu-fg-subtle);
+}
+
+.codestash-tiptap .ProseMirror li > p {
+  margin: 0.12em 0;
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0.15em;
+  margin: 0.35em 0 0.65em;
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  margin: 0.28em 0;
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] li > label {
+  position: relative;
+  flex: 0 0 auto;
+  user-select: none;
+  margin-top: 0.26em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  margin: 0;
+  border-radius: 9999px;
+  border: 1.75px solid var(--ayu-fg);
+  background: var(--ayu-sunk);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 90ms ease;
+}
+
+.codestash-tiptap
+  .ProseMirror
+  ul[data-type="taskList"]
+  li
+  > label
+  input[type="checkbox"]:hover {
+  border-color: var(--ayu-accent);
+  background: color-mix(in srgb, var(--ayu-accent) 15%, var(--ayu-sunk));
+}
+
+.codestash-tiptap
+  .ProseMirror
+  ul[data-type="taskList"]
+  li[data-checked="true"]
+  > label
+  input[type="checkbox"],
+.codestash-tiptap
+  .ProseMirror
+  ul[data-type="taskList"]
+  li
+  > label
+  input[type="checkbox"]:checked {
+  background: var(--ayu-accent);
+  border-color: var(--ayu-accent);
+}
+
+.codestash-tiptap
+  .ProseMirror
+  ul[data-type="taskList"]
+  li[data-checked="true"]
+  > label
+  input[type="checkbox"]::after,
+.codestash-tiptap
+  .ProseMirror
+  ul[data-type="taskList"]
+  li
+  > label
+  input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1.5px;
+  width: 4.5px;
+  height: 7.5px;
+  border-right: 2px solid var(--ayu-accent-on);
+  border-bottom: 2px solid var(--ayu-accent-on);
+  transform: rotate(45deg);
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.codestash-tiptap .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div {
+  text-decoration: line-through;
+  color: var(--ayu-fg-subtle);
+  opacity: 0.72;
+}
+
+.codestash-tiptap .ProseMirror blockquote {
+  border-left: 3px solid var(--ayu-accent);
+  padding: 0.2em 0 0.2em 0.9em;
+  margin: 0.45em 0 0.65em;
+  color: var(--ayu-fg);
+}
+
+.codestash-tiptap .ProseMirror .tableWrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.codestash-tiptap .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0.65em 0;
+  border: 1px solid var(--ayu-border);
+}
+
+.codestash-tiptap .ProseMirror th,
+.codestash-tiptap .ProseMirror td {
+  border: 1px solid var(--ayu-border);
+  padding: 0.45em 0.7em;
+  vertical-align: top;
+  min-width: 72px;
+  word-break: break-word;
+  position: relative;
+}
+
+.codestash-tiptap .ProseMirror th {
+  background: var(--ayu-panel);
+  font-weight: 600;
+  text-align: left;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-tiptap .ProseMirror th p,
+.codestash-tiptap .ProseMirror td p {
+  margin: 0;
+}
+
+.codestash-tiptap .ProseMirror .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--editor-selection-bg, rgba(56, 139, 253, 0.34));
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.codestash-tiptap .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+.codestash-tiptap .ProseMirror .ProseMirror-selectednode.codestash-image-node {
+  outline: none;
+}
+
+/* ==========================================================================
+   Markdown Formatted Preview & Diagram Canvas Styles
+   ========================================================================== */
+.codestash-markdown-preview {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 20px clamp(16px, 2.5vw, 32px) 96px;
+  box-sizing: border-box;
+  color: var(--ayu-editor-fg);
+  font-family: var(--font-sans);
+  font-size: var(--editor-font-size, 14px);
+  line-height: 1.68;
+  user-select: text;
+  -webkit-user-select: text;
+  overflow-wrap: break-word;
+}
+
+.codestash-markdown-preview .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35em 0;
+}
+
+.codestash-markdown-preview::selection,
+.codestash-markdown-preview *::selection {
+  background: var(--editor-selection-bg, rgba(56, 139, 253, 0.34));
+}
+
+.codestash-markdown-preview > *:first-child {
+  margin-top: 0;
+}
+
+.codestash-markdown-preview h1,
+.codestash-markdown-preview h2,
+.codestash-markdown-preview h3,
+.codestash-markdown-preview h4,
+.codestash-markdown-preview h5,
+.codestash-markdown-preview h6 {
+  color: var(--ayu-editor-fg);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin: 1.15em 0 0.5em;
+}
+
+.codestash-markdown-preview h1 {
+  font-size: 1.75em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--ayu-line);
+}
+
+.codestash-markdown-preview h2 {
+  font-size: 1.38em;
+  padding-bottom: 0.22em;
+  border-bottom: 1px solid var(--ayu-line);
+}
+
+.codestash-markdown-preview h3 {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.codestash-markdown-preview h4 {
+  font-size: 1.02em;
+  font-weight: 600;
+}
+
+.codestash-markdown-preview p {
+  margin: 0 0 0.85em;
+}
+
+.codestash-markdown-preview strong {
+  font-weight: 700;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-markdown-preview a {
+  color: var(--ayu-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.codestash-markdown-preview a:hover {
+  color: var(--ayu-accent-hover);
+}
+
+.codestash-markdown-preview hr {
+  border: 0;
+  border-top: 1px solid var(--ayu-border);
+  margin: 1.4em 0;
+}
+
+.codestash-markdown-preview blockquote {
+  border-left: 3px solid var(--ayu-accent);
+  padding: 0.25em 0 0.25em 1em;
+  margin: 0.85em 0;
+  color: var(--ayu-fg);
+}
+
+.codestash-md-alert-body > *:last-child {
+  margin-bottom: 0;
+}
+
+.codestash-markdown-preview ul,
+.codestash-markdown-preview ol {
+  padding-left: 1.55em;
+  margin: 0.45em 0 0.9em;
+}
+
+.codestash-markdown-preview ul {
+  list-style-type: disc;
+}
+
+.codestash-markdown-preview ol {
+  list-style-type: decimal;
+}
+
+.codestash-markdown-preview ul.contains-task-list {
+  list-style: none;
+  padding-left: 0.2em;
+}
+
+.codestash-markdown-preview li {
+  margin: 0.24em 0;
+}
+
+.codestash-markdown-preview li.task-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55em;
+}
+
+.codestash-markdown-preview li.task-list-item > input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin-top: 0.34em;
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  min-height: 15px;
+  border-radius: 9999px;
+  border: 1.75px solid var(--ayu-fg);
+  background: var(--ayu-sunk);
+  position: relative;
+}
+
+.codestash-markdown-preview li.task-list-item > input[type="checkbox"]:checked {
+  background: var(--ayu-accent);
+  border-color: var(--ayu-accent);
+}
+
+.codestash-markdown-preview li.task-list-item > input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 3.5px;
+  top: 1px;
+  width: 4.5px;
+  height: 7.5px;
+  border-right: 2px solid var(--ayu-accent-on);
+  border-bottom: 2px solid var(--ayu-accent-on);
+  transform: rotate(45deg);
+}
+
+.codestash-markdown-preview :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.14em 0.42em;
+  border-radius: 5px;
+  background: var(--ayu-panel);
+  color: var(--ayu-accent);
+  border: 1px solid var(--ayu-border);
+}
+
+.codestash-markdown-preview kbd {
+  display: inline-block;
+  padding: 0.1em 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  color: var(--ayu-editor-fg);
+  background: var(--ayu-sunk);
+  border: 1px solid var(--ayu-border);
+  border-radius: 5px;
+  box-shadow: inset 0 -1px 0 var(--ayu-line);
+}
+
+.codestash-markdown-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.92em;
+}
+
+.codestash-markdown-preview th,
+.codestash-markdown-preview td {
+  border-bottom: 1px solid var(--ayu-line);
+  border-right: 1px solid var(--ayu-line);
+  padding: 0.52em 0.85em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.codestash-markdown-preview th:last-child,
+.codestash-markdown-preview td:last-child {
+  border-right: none;
+}
+
+.codestash-markdown-preview tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.codestash-markdown-preview th {
+  background: var(--ayu-panel);
+  font-weight: 600;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-markdown-preview tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--ayu-sunk) 50%, transparent);
+}
+
+.codestash-diagram-svg svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+}
+
+/* Theme-adaptive syntax tokens for rehype-highlight blocks inside Markdown Preview */
+.codestash-markdown-preview .hljs {
+  background: transparent;
+  color: var(--ayu-editor-fg);
+}
+
+.codestash-markdown-preview .hljs-comment,
+.codestash-markdown-preview .hljs-quote {
+  color: var(--ayu-fg-subtle);
+  font-style: italic;
+}
+
+.codestash-markdown-preview .hljs-keyword,
+.codestash-markdown-preview .hljs-selector-tag,
+.codestash-markdown-preview .hljs-addition,
+.codestash-markdown-preview .hljs-meta-keyword {
+  color: var(--ayu-info, #c678dd);
+}
+
+.codestash-markdown-preview .hljs-string,
+.codestash-markdown-preview .hljs-attr,
+.codestash-markdown-preview .hljs-symbol,
+.codestash-markdown-preview .hljs-bullet,
+.codestash-markdown-preview .hljs-regexp {
+  color: var(--ayu-success, #98c379);
+}
+
+.codestash-markdown-preview .hljs-number,
+.codestash-markdown-preview .hljs-literal,
+.codestash-markdown-preview .hljs-variable,
+.codestash-markdown-preview .hljs-template-variable,
+.codestash-markdown-preview .hljs-attribute {
+  color: var(--ayu-warning, #d19a66);
+}
+
+.codestash-markdown-preview .hljs-title,
+.codestash-markdown-preview .hljs-section,
+.codestash-markdown-preview .hljs-name,
+.codestash-markdown-preview .hljs-built_in {
+  color: var(--ayu-accent, #61afef);
+}
+
+.codestash-markdown-preview .hljs-deletion,
+.codestash-markdown-preview .hljs-tag {
+  color: var(--ayu-error, #e06c75);
+}

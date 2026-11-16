@@ -1,0 +1,116 @@
+# ==========================================
+# Dependencies & Package Managers
+# ==========================================
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==========================================
+# Production Builds & Bundlers
+# ==========================================
+/dist/
+/dist-ssr/
+/release/
+/out/
+/build/
+/coverage/
+.vite/
+.vitest/
+*.blockmap
+*.tsbuildinfo
+*.local
+
+# ==========================================
+# Tauri, Rust & Cross-Compilation Caches
+# ==========================================
+src-tauri/target/
+src-tauri/gen/
+/.xwin-cache/
+
+# ==========================================
+# Local Runtime Data, Backups & User Config
+# ==========================================
+/data/
+/assets/
+assets-index.json
+appearance-config.json
+appearance-config*.json
+codestash-backup.jsonl
+codestash-backup*.jsonl
+codestash-backup*.zip
+*-backup.jsonl
+*-backup.zip
+*.jsonl.tmp
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Local Scratch Scripts, Internal Docs & AI Assistant Files
+# ==========================================
+/docs/
+ANTIGRAVITY.md
+.antigravity/
+.gemini/
+.claude/
+.cursor/
+.windsurf/
+.agent/
+.agents/
+scripts/extract-colors.cjs
+
+# ==========================================
+# Environment Variables, Keys & Certificates
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+
+# ==========================================
+# Logs & Test Reports
+# ==========================================
+*.log
+/logs/
+/playwright-report/
+/test-results/
+
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+desktop.ini
+*~
+
+# ==========================================
+# IDE & Editor Caches
+# ==========================================
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
