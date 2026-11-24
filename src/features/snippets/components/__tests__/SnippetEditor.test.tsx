@@ -4,7 +4,10 @@ import { openExternalUrl } from "@/core/utils/openExternalUrl";
 import { SettingsProvider } from "@/features/settings/context/SettingsContext";
 import { EditorSettings } from "@/features/settings/components/sections/EditorSettings";
 import { SnippetEditor } from "../SnippetEditor";
-import { useFormattingBarSessionStore } from "../../editor";
+import {
+  useFormattingBarSessionStore,
+  useMarkdownPreviewSessionStore,
+} from "../../editor";
 import * as mermaidRenderer from "../../editor/utils/mermaidRenderer";
 import { CreateSnippetInput, Snippet, Tag, UpdateSnippetInput } from "@/core/types";
 
@@ -88,7 +91,9 @@ describe("SnippetEditor Dual-Mode (Plain Text Rich Engine & Dynamic Pill Bar)", 
   let onAutoSave: ReturnType<typeof vi.fn<AutoSaveFn>>;
 
   beforeEach(() => {
+    localStorage.clear();
     useFormattingBarSessionStore.getState().resetSession();
+    useMarkdownPreviewSessionStore.getState().resetSession();
     onAutoSave = vi.fn<AutoSaveFn>().mockImplementation(async (data) =>
       createMockSnippet({
         title: data.title ?? "Nota de prueba",
@@ -1424,5 +1429,257 @@ describe("SnippetEditor Dual-Mode (Plain Text Rich Engine & Dynamic Pill Bar)", 
     expect(codeCtxMenu).not.toHaveTextContent(/previsualizar/i);
     expect(codeCtxMenu).not.toHaveTextContent(/ortograf/i);
     expect(codeCtxMenu).not.toHaveTextContent(/inspeccionar/i);
+  });
+
+  it("remembers Markdown preview preference across snippet/folder switches, fragment tabs, and app restarts", async () => {
+    const mdSnippetA = createMockSnippet({
+      id: "md-folder-1",
+      title: "Doc Carpeta 1",
+      folder_id: "folder-1",
+      code: "# Documento Carpeta 1\n\nTexto inicial",
+      language: "markdown",
+      fragments: [
+        {
+          id: "frag-md-1",
+          label: "Resumen",
+          code: "# Documento Carpeta 1\n\nTexto inicial",
+          language: "markdown",
+        },
+        {
+          id: "frag-md-2",
+          label: "Detalle",
+          code: "## Segunda Pestaña Markdown\n\nContenido adicional",
+          language: "markdown",
+        },
+        {
+          id: "frag-ts-3",
+          label: "Código",
+          code: "export const ok = true;",
+          language: "typescript",
+        },
+      ],
+    });
+
+    const mdSnippetB = createMockSnippet({
+      id: "md-folder-2",
+      title: "Doc Carpeta 2",
+      folder_id: "folder-2",
+      code: "# Documento Carpeta 2\n\nOtro folder",
+      language: "markdown",
+    });
+
+    const tsSnippet = createMockSnippet({
+      id: "ts-folder-2",
+      title: "Script TS",
+      folder_id: "folder-2",
+      code: "const a = 1;",
+      language: "typescript",
+    });
+
+    const { rerender, unmount } = render(
+      <SnippetEditor
+        key={mdSnippetA.id}
+        snippet={mdSnippetA}
+        activeFolderId="folder-1"
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+
+    // Initially starts in Markdown code mode
+    const initialPreviewBtn = screen.getByTestId("toggle-markdown-preview-btn");
+    expect(initialPreviewBtn).toHaveAttribute("aria-pressed", "false");
+    expect(document.querySelector(".cm-editor")).not.toBeNull();
+
+    // Enable Markdown preview on Snippet A (Folder 1)
+    fireEvent.click(initialPreviewBtn);
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toBeInTheDocument();
+    });
+    expect(localStorage.getItem("codestash_markdown_preview_enabled")).toBe("true");
+
+    // Switching fragment tabs within the same snippet keeps Markdown preview active for Markdown tabs
+    fireEvent.click(screen.getByText("Detalle"));
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent(
+        "Segunda Pestaña Markdown"
+      );
+    });
+
+    // Switching to a non-Markdown fragment hides preview without erasing the remembered preference
+    fireEvent.click(screen.getByText("Código"));
+    expect(screen.queryByTestId("markdown-preview-panel")).not.toBeInTheDocument();
+    expect(document.querySelector(".cm-editor")).not.toBeNull();
+
+    fireEvent.click(screen.getByText("Resumen"));
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent(
+        "Documento Carpeta 1"
+      );
+    });
+
+    // Switch to another snippet in Folder 2 (Markdown) -> remembers preview ON
+    rerender(
+      <SnippetEditor
+        key={mdSnippetB.id}
+        snippet={mdSnippetB}
+        activeFolderId="folder-2"
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent(
+        "Documento Carpeta 2"
+      );
+    });
+    expect(screen.getByTestId("toggle-markdown-preview-btn")).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+
+    // Switch away to a TypeScript snippet (e.g. changing snippet/folder) then simulate closing & reopening app
+    rerender(
+      <SnippetEditor
+        key={tsSnippet.id}
+        snippet={tsSnippet}
+        activeFolderId="folder-2"
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+    expect(screen.queryByTestId("toggle-markdown-preview-btn")).not.toBeInTheDocument();
+
+    unmount();
+    useMarkdownPreviewSessionStore.setState({ isMarkdownPreviewEnabled: false });
+    useMarkdownPreviewSessionStore.getState().syncFromStorage();
+
+    // After reopening app on Folder 1 -> Snippet A opens directly in Markdown preview
+    const reopened = render(
+      <SnippetEditor
+        key={mdSnippetA.id}
+        snippet={mdSnippetA}
+        activeFolderId="folder-1"
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent(
+        "Documento Carpeta 1"
+      );
+    });
+
+    // Turning preview OFF is also remembered across snippet/folder switches
+    fireEvent.click(screen.getByTestId("toggle-markdown-preview-btn"));
+    await waitFor(() => {
+      expect(screen.queryByTestId("markdown-preview-panel")).not.toBeInTheDocument();
+      expect(document.querySelector(".cm-editor")).not.toBeNull();
+    });
+    expect(localStorage.getItem("codestash_markdown_preview_enabled")).toBe("false");
+
+    reopened.rerender(
+      <SnippetEditor
+        key={mdSnippetB.id}
+        snippet={mdSnippetB}
+        activeFolderId="folder-2"
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+    expect(screen.queryByTestId("markdown-preview-panel")).not.toBeInTheDocument();
+    expect(screen.getByTestId("toggle-markdown-preview-btn")).toHaveAttribute(
+      "aria-pressed",
+      "false"
+    );
+  });
+
+  it("keeps newly started empty Markdown drafts editable while authoring and previews hydrated summaries when preference is enabled", async () => {
+    useMarkdownPreviewSessionStore.getState().setMarkdownPreviewEnabled(true);
+
+    const emptyPlainSnippet = createMockSnippet({
+      id: "md-empty-draft",
+      title: "Borrador vacío",
+      code: "",
+      language: "plaintext",
+    });
+
+    const { rerender } = render(
+      <SnippetEditor
+        key={emptyPlainSnippet.id}
+        snippet={emptyPlainSnippet}
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+
+    const proseMirrorEl = screen
+      .getByTestId("rich-text-editor-panel")
+      .querySelector(".ProseMirror")!;
+
+    fireEvent.paste(proseMirrorEl, {
+      clipboardData: {
+        getData: (type: string) =>
+          type === "text/plain" ? "# Nuevo título\n\n- Primer punto\n- Segundo punto" : "",
+      },
+    });
+
+    // Switches to Markdown CodeEditorPanel while staying editable (does not interrupt authoring)
+    const previewBtn = await screen.findByTestId("toggle-markdown-preview-btn");
+    expect(previewBtn).toHaveAttribute("aria-pressed", "false");
+    expect(screen.queryByTestId("markdown-preview-panel")).not.toBeInTheDocument();
+    expect(document.querySelector(".cm-editor")).not.toBeNull();
+
+    // User can still explicitly toggle preview ON on the new draft
+    fireEvent.click(previewBtn);
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent("Nuevo título");
+    });
+
+    // Hydrating a summary snippet while preview preference is ON opens directly in preview mode
+    const summaryMdSnippet = createMockSnippet({
+      id: "md-hydrated",
+      title: "Resumen lazy",
+      code: "",
+      language: "markdown",
+      is_summary: true,
+    });
+
+    rerender(
+      <SnippetEditor
+        key={summaryMdSnippet.id}
+        snippet={summaryMdSnippet}
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+    expect(screen.queryByTestId("markdown-preview-panel")).not.toBeInTheDocument();
+
+    rerender(
+      <SnippetEditor
+        key={summaryMdSnippet.id}
+        snippet={{
+          ...summaryMdSnippet,
+          is_summary: false,
+          code: "## Documento hidratado\n\nContenido completo",
+          fragments: [
+            {
+              id: "frag-hydrated",
+              label: "Fragmento 1",
+              code: "## Documento hidratado\n\nContenido completo",
+              language: "markdown",
+            },
+          ],
+        }}
+        tags={tags}
+        onAutoSave={onAutoSave}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("markdown-preview-panel")).toHaveTextContent(
+        "Documento hidratado"
+      );
+    });
   });
 });

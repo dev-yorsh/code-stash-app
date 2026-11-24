@@ -20,6 +20,8 @@ import {
   EditorStatusBar,
   SnippetDeleteConfirmModal,
   useFormattingBarSessionStore,
+  useMarkdownPreviewSessionStore,
+  CodeChangeMeta,
 } from "../editor";
 
 export interface SnippetEditorProps {
@@ -94,8 +96,16 @@ export const SnippetEditor: React.FC<SnippetEditorProps> = ({
   const isMarkdown = normalizedLang === "markdown" || normalizedLang === "md";
   const hasPlainTextContent = isPlainText && code.trim().length > 0;
   const hasMarkdownContent = isMarkdown && code.trim().length > 0;
-  const [isMarkdownPreview, setIsMarkdownPreview] = useState(false);
-  const isMarkdownPreviewActive = hasMarkdownContent && isMarkdownPreview;
+  const isMarkdownPreviewPreferred = useMarkdownPreviewSessionStore(
+    (s) => s.isMarkdownPreviewEnabled
+  );
+  const setMarkdownPreviewPreferred = useMarkdownPreviewSessionStore(
+    (s) => s.setMarkdownPreviewEnabled
+  );
+  // Keeps newly started or cleared fragments editable while typing instead of switching mid-keystroke
+  const [isEditingMarkdownDraft, setIsEditingMarkdownDraft] = useState(false);
+  const isMarkdownPreviewActive =
+    hasMarkdownContent && isMarkdownPreviewPreferred && !isEditingMarkdownDraft;
   const isFormattingBarHidden = useFormattingBarSessionStore(
     (s) => s.isFormattingBarHidden
   );
@@ -110,33 +120,36 @@ export const SnippetEditor: React.FC<SnippetEditorProps> = ({
   const prevIsPlainTextRef = useRef(isPlainText);
   const draftPendingRevealRef = useRef<boolean>(!snippet);
   const handledNewFragmentIdRef = useRef<string | null>(null);
+  const newlyAddedFragmentIdRef = useRef<string | null>(newlyAddedFragmentId);
+  newlyAddedFragmentIdRef.current = newlyAddedFragmentId;
 
   useEffect(() => {
     hasEditorFocusRef.current = false;
     draftPendingRevealRef.current = !snippet;
-    setIsMarkdownPreview(false);
   }, [snippet?.id]);
 
   useEffect(() => {
-    setIsMarkdownPreview(false);
-  }, [activeFragmentId]);
+    const addedId = newlyAddedFragmentIdRef.current;
+    setIsEditingMarkdownDraft(Boolean(addedId && addedId === activeFragmentId));
+  }, [snippet?.id, activeFragmentId]);
 
-  useEffect(() => {
-    if (!hasMarkdownContent && isMarkdownPreview) {
-      setIsMarkdownPreview(false);
+  const handleEditorCodeChange = (nextCode: string, meta?: CodeChangeMeta) => {
+    if (code.trim().length === 0 || nextCode.trim().length === 0) {
+      setIsEditingMarkdownDraft(true);
     }
-  }, [hasMarkdownContent, isMarkdownPreview]);
+    handleCodeChange(nextCode, meta);
+  };
 
   const handleToggleMarkdownPreview = () => {
-    setIsMarkdownPreview((prev) => {
-      const next = !prev;
-      if (!next) {
-        requestAnimationFrame(() => {
-          codeEditorRef.current?.focus();
-        });
-      }
-      return next;
-    });
+    const next = !isMarkdownPreviewActive;
+    setMarkdownPreviewPreferred(next);
+    if (next) {
+      setIsEditingMarkdownDraft(false);
+    } else {
+      requestAnimationFrame(() => {
+        codeEditorRef.current?.focus();
+      });
+    }
   };
 
   // Reveal formatting tools once when inserting plain text into a newly created snippet or draft
@@ -263,7 +276,7 @@ export const SnippetEditor: React.FC<SnippetEditorProps> = ({
             isSlideAnimationActive={newlyAddedFragmentId === activeFragmentId}
             showFormattingBarRestore={showFormattingBarRestore}
             onShowFormattingBar={showFormattingBar}
-            onChange={handleCodeChange}
+            onChange={handleEditorCodeChange}
             onLanguageDetectedOnPaste={handleLanguagePasted}
             onEditorReady={setRichEditor}
             onToggleSpellcheck={(enabled) => updateSetting("spellcheck", enabled)}
@@ -284,7 +297,7 @@ export const SnippetEditor: React.FC<SnippetEditorProps> = ({
             lineNumbers={settings.lineNumbers}
             activeTheme={activeTheme}
             isSlideAnimationActive={newlyAddedFragmentId === activeFragmentId}
-            onChange={handleCodeChange}
+            onChange={handleEditorCodeChange}
             onLanguageDetectedOnPaste={handleLanguagePasted}
             onPreviewMarkdown={hasMarkdownContent ? handleToggleMarkdownPreview : undefined}
           />

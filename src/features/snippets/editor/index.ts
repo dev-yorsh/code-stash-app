@@ -12,6 +12,11 @@ export { TextFormattingBar } from "./components/TextFormattingBar";
 export type { TextFormattingBarProps } from "./components/TextFormattingBar";
 export { useFormattingBarSessionStore } from "./model/formattingBarSession.store";
 export type { FormattingBarSessionState } from "./model/formattingBarSession.store";
+export {
+  useMarkdownPreviewSessionStore,
+  MARKDOWN_PREVIEW_STORAGE_KEY,
+} from "./model/markdownPreviewSession.store";
+export type { MarkdownPreviewSessionState } from "./model/markdownPreviewSession.store";
 export { EditorStatusBar } from "./components/EditorStatusBar";
 export type { EditorStatusBarProps } from "./components/EditorStatusBar";
 export { SnippetDeleteConfirmModal } from "./components/SnippetDeleteConfirmModal";
